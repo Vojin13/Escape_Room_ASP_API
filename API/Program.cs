@@ -1,6 +1,7 @@
-// Program.cs
 using API.Extensions;
+using Application;
 using ASPLAB2.API;
+using ASPLAB2.API.JWT;
 using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructure(settings.ConnectionStrings.DefaultConnection);
 builder.Services.AddImplementation();
 builder.Services.AddJwt(settings);
+builder.Services.AddTransient<IJwtHandler, JwtHandler>();
 builder.Services.AddApplicationUser();
 
 var app = builder.Build();

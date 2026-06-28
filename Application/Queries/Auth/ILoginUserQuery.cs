@@ -2,7 +2,7 @@
 
 namespace Application.Queries.Auth
 {
-    public interface ILoginUserQuery : IQuery<LoginDTO, LoginResponseDTO>
+    public interface ILoginUserQuery : IQuery<LoginDTO, JwtTokenResponseDTO>
     {
     }
 }

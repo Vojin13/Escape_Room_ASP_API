@@ -10,4 +10,8 @@
     <Folder Include="DTO\Search\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
 </Project>

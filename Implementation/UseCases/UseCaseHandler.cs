@@ -13,14 +13,14 @@ namespace Implementation.UseCases
         {
             _user = user;
         }
-        private void HandleAuthorization(IUseCase useCase) 
+        private void HandleAuthorization(IUseCase useCase)
         {
             if (!_user.AllowedUseCases.Contains(useCase.Id))
             {
                 throw new UnauthorizedUseCaseException(_user.Username, useCase.Name);
             }
-        } 
-        public void ExecuteCommand<TRequest>(ICommand<TRequest> command, TRequest request)   
+        }
+        public void ExecuteCommand<TRequest>(ICommand<TRequest> command, TRequest request)
         {
             HandleAuthorization(command);
 
@@ -35,14 +35,14 @@ namespace Implementation.UseCases
             Console.WriteLine($"{_user.Username} has executed use case: {command.Name}" + stopwatch.ElapsedMilliseconds + " ms.");
         }
 
-        public TResult ExecuteQuery<TParam,TResult>(IQuery<TParam, TResult> query, TParam request)
+        public TResult ExecuteQuery<TParam, TResult>(IQuery<TParam, TResult> query, TParam request)
             where TResult : class
         {
             HandleAuthorization(query);
             Stopwatch stopwatch = Stopwatch.StartNew();
-            
+
             stopwatch.Start();
-            
+
             var result = query.Execute(request);
 
             stopwatch.Stop();

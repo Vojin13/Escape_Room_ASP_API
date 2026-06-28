@@ -1,6 +1,6 @@
-﻿namespace ASPLAB2.API.JWT
+﻿namespace Application.DTO.Auth
 {
-    public class JwtTokenResponse
+    public class JwtTokenResponseDTO
     {
         public string Token { get; set; }
         public string RefreshToken { get; set; }

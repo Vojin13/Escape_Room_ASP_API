@@ -1,13 +1,16 @@
-﻿using Domain.Entities;
+﻿using Application;
+using Application.DTO.Auth;
+using Domain.Entities;
 using Implementation;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace ASPLAB2.API.JWT
 {
-    public class JwtHandler
+    public class JwtHandler : IJwtHandler
     {
         private readonly AppDbContext _context;
         private readonly AppSettings _appSettings;
@@ -18,7 +21,7 @@ namespace ASPLAB2.API.JWT
             _context = context;
         }
 
-        public JwtTokenResponse MakeToken(User user)
+        public JwtTokenResponseDTO MakeToken(User user)
         {
             Guid tokenGuid = Guid.NewGuid();
 
@@ -34,7 +37,7 @@ namespace ASPLAB2.API.JWT
                  new Claim("Email", user.Email),
                  new Claim("Id", user.Id.ToString()),
                  new Claim("TokenId", tokenId),
-                 //new Claim("UseCaseIds", JsonConvert.SerializeObject(user.UseCaseIds)),
+                 new Claim("UseCaseIds", JsonConvert.SerializeObject(user.UserUseCases.Select(x => x.UseCaseId).ToList())),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JwtSettings.SecretKey));
@@ -72,10 +75,10 @@ namespace ASPLAB2.API.JWT
             _context.AuthTokens.Add(jwtToken);
             _context.AuthTokens.Add(refreshTokenEntity);
             _context.SaveChanges();
-            return new JwtTokenResponse
+            return new JwtTokenResponseDTO
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
             };
         }
     }

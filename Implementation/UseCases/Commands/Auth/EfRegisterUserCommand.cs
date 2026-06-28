@@ -5,7 +5,7 @@ using Domain.Entities;
 using FluentValidation;
 using Implementation.UseCases.Validators.Auth;
 
-namespace Implementation.UseCases.Commands
+namespace Implementation.UseCases.Commands.Auth
 {
     public class EfRegisterUserCommand : EfUseCase, IRegisterUserCommand
     {

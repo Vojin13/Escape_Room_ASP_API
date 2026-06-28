@@ -41,19 +41,26 @@ public class GlobalExceptionHandlingMiddleware
                 return;
             }
 
-            //if (ex is NotFoundException)
-            //{
-            //    context.Response.StatusCode = 404;
-            //    await context.Response.WriteAsJsonAsync(new { message = ex.Message });
-            //    return;
-            //}
+            if (ex is InvalidCredentialsException)
+            {
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+                return;
+            }
 
-            //if (ex is ConflictException)
-            //{
-            //    context.Response.StatusCode = 409;
-            //    await context.Response.WriteAsJsonAsync(new { message = ex.Message });
-            //    return;
-            //}
+            if (ex is NotFoundException)
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+                return;
+            }
+
+            if (ex is ConflictException)
+            {
+                context.Response.StatusCode = 409;
+                await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+                return;
+            }
 
             var supportCode = Guid.NewGuid();
 

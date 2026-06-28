@@ -1,5 +1,6 @@
 ﻿using Application.Commands.Auth;
 using Application.DTO.Auth;
+using Application.Queries.Auth;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,30 @@ namespace API.Controllers.Auth
         {
             _handler.ExecuteCommand(command, dto);
             return StatusCode(201);
+        }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginDTO dto,
+                                   [FromServices] ILoginUserQuery query)
+        {
+            var result = _handler.ExecuteQuery(query, dto);
+            return Ok(result);
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout([FromBody] LogoutDTO dto,
+                            [FromServices] ILogoutUserCommand command)
+        {
+            _handler.ExecuteCommand(command, dto);
+            return NoContent();
+        }
+
+        [HttpPost("refresh")]
+        public IActionResult Refresh([FromBody] RefreshTokenDTO dto,
+                             [FromServices] IRefreshTokenQuery query)
+        {
+            var result = _handler.ExecuteQuery(query, dto);
+            return Ok(result);
         }
     }
 }
