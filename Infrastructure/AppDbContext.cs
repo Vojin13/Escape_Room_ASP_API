@@ -13,7 +13,6 @@ namespace Implementation
         public DbSet<RoomImage> RoomImages { get; set; }
         public DbSet<Timeslot> Timeslots { get; set; }
         public DbSet<RoomTimeslot> RoomTimeslots { get; set; }
-        public DbSet<RoomBlockade> RoomBlockades { get; set; }
         public DbSet<TimeslotLock> TimeslotLocks { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingStatusLookup> BookingStatuses { get; set; }

@@ -11,6 +11,7 @@ namespace Implementation
         public string Username => "unauthorized";
 
         public IEnumerable<string> AllowedUseCases =>
-            new List<string> { "register-user", "login", "refresh-token", "get-rooms", "get-room", "get-room-availability" };
+            new List<string> { "register-user", "login", "refresh-token", "get-rooms", "get-room", "get-room-availability",
+            "seed", "create-room", "update-room" };
     }
 }

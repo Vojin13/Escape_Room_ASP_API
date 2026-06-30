@@ -1,4 +1,5 @@
-﻿using Application.DTO.Auth;
+using Application.DTO.Auth;
+using Application.DTO.Rooms;
 using AutoMapper;
 using Domain.Entities;
 

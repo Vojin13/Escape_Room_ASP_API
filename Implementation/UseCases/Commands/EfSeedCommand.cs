@@ -49,7 +49,7 @@ namespace Implementation.UseCases.Commands
             "create-room", "update-room", "toggle-room-active",
             "create-blockade", "delete-blockade", "get-blockades",
             "delete-review", "get-users", "update-user-role",
-            "get-all-bookings", "seed"
+            "get-all-bookings", "seed", "delete-room"
         }).ToList();
 
             _ctx.RoleUseCases.AddRange(userUseCases.Select(uc => new RoleUseCase
