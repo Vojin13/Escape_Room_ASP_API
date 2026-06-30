@@ -13,5 +13,6 @@
         public double AverageRating { get; set; }
         public int ReviewCount { get; set; }
         public string PrimaryImage { get; set; }
+        public bool IsActive { get; set; }
     }
 }

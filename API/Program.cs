@@ -40,6 +40,7 @@ if (app.Environment.IsDevelopment())
 
 
 app.UseCors("AllowAngular");
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

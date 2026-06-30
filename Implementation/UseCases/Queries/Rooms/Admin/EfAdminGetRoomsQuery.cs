@@ -1,21 +1,21 @@
-﻿using Application.DTO;
+using Application.DTO;
 using Application.DTO.Rooms;
 using Application.DTO.Search;
 using Application.Extensions;
-using Application.Queries.Rooms;
+using Application.Queries.Rooms.Admin;
 using Microsoft.EntityFrameworkCore;
 
-namespace Implementation.UseCases.Queries.Rooms
+namespace Implementation.UseCases.Queries.Rooms.Admin
 {
-    public class EfGetRoomsQuery : EfUseCase, IGetRoomsQuery
+    public class EfAdminGetRoomsQuery : EfUseCase, IAdminGetRoomsQuery
     {
-        public EfGetRoomsQuery(AppDbContext context) : base(context)
+        public EfAdminGetRoomsQuery(AppDbContext context) : base(context)
         {
         }
 
-        public string Name => "Get all active rooms";
+        public string Name => "Admin Get Rooms";
 
-        public string Id => "get-rooms";
+        public string Id => "admin-get-rooms";
 
         public PagedResponse<RoomDTO> Execute(RoomSearchDTO request)
         {
@@ -23,42 +23,30 @@ namespace Implementation.UseCases.Queries.Rooms
                 .Include(x => x.Difficulty)
                 .Include(x => x.Reviews)
                 .Include(x => x.Images)
-                .Where(x => x.IsActive)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.Title))
-            {
                 query = query.Where(x => x.Title.ToLower().Contains(request.Title.ToLower()));
-            }
 
             if (request.DifficultyId.HasValue)
-            {
                 query = query.Where(x => x.DifficultyId == request.DifficultyId);
-            }
 
             if (request.MinPrice.HasValue)
-            {
                 query = query.Where(r => r.PricePerPerson >= request.MinPrice);
-            }
 
             if (request.MaxPrice.HasValue)
-            {
                 query = query.Where(r => r.PricePerPerson <= request.MaxPrice);
-            }
 
             if (request.PlayersCount.HasValue)
-            {
                 query = query.Where(r => r.MinimumPlayers <= request.PlayersCount &&
                                          r.MaximumPlayers >= request.PlayersCount);
-            }
 
             if (request.DurationInMinutes.HasValue)
-            {
                 query = query.Where(r => r.DurationInMinutes == request.DurationInMinutes);
-            }
 
             return query
-                .OrderBy(x => x.Id)
+                .OrderByDescending(x => x.IsActive)
+                .ThenBy(x => x.Id)
                 .Select(x => new RoomDTO
                 {
                     Id = x.Id,
@@ -76,8 +64,6 @@ namespace Implementation.UseCases.Queries.Rooms
                     AverageRating = x.Reviews.Any() ? x.Reviews.Average(y => (double)y.Rating) : 0,
                     IsActive = x.IsActive,
                 }).ToPagedResponse(request.Page, request.PerPage);
-
         }
     }
 }
-

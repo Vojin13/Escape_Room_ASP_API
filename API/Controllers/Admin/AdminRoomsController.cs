@@ -1,5 +1,7 @@
 ﻿using Application.Commands.Rooms;
 using Application.DTO.Rooms;
+using Application.DTO.Search;
+using Application.Queries.Rooms.Admin;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +18,21 @@ namespace API.Controllers.Admin
         public AdminRoomsController(UseCaseHandler handler)
         {
             _handler = handler;
+        }
+
+        [HttpGet]
+        public IActionResult Get([FromQuery] RoomSearchDTO dto,
+                                    [FromServices] IAdminGetRoomsQuery query)
+        {
+            var result = _handler.ExecuteQuery(query, dto);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetRoom(int id, [FromServices] IAdminGetRoomQuery query)
+        {
+            var result = _handler.ExecuteQuery(query, id);
+            return Ok(result);
         }
 
         [HttpPost]

@@ -3,6 +3,9 @@ using Application.Commands.Auth;
 using Application.Commands.Rooms;
 using Application.Queries.Auth;
 using Application.Queries.Rooms;
+using Application.Queries.Rooms.Admin;
+using Implementation.UseCases.Queries.Rooms.Admin;
+using Implementation.UseCases.Queries.Rooms;
 using Implementation.Mappings;
 using Implementation.UseCases.Commands;
 using Implementation.UseCases.Commands.Auth;
@@ -40,6 +43,8 @@ public static class DependencyInjection
         services.AddTransient<IGetRoomsQuery, EfGetRoomsQuery>();
         services.AddTransient<IGetRoomQuery, EfGetRoomQuery>();
         services.AddTransient<IGetRoomAvailabilityQuery, EfGetRoomAvailabilityQuery>();
+        services.AddTransient<IAdminGetRoomsQuery, EfAdminGetRoomsQuery>();
+        services.AddTransient<IAdminGetRoomQuery, EfAdminGetRoomQuery>();
 
         return services;
     }
