@@ -20,6 +20,15 @@ builder.Services.AddImplementation();
 builder.Services.AddJwt(settings);
 builder.Services.AddTransient<IJwtHandler, JwtHandler>();
 builder.Services.AddApplicationUser();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -29,6 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseCors("AllowAngular");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -10,19 +10,22 @@ namespace Application.Extensions
             int? perPage) where TDto : class
         {
             int currentPage = page ?? 1;
-            int currentPerPage = perPage ?? 10;
+            int currentPerPage = perPage ?? 9;
+
+            int totalCount = query.Count();
+
+            var items = query
+                .Skip((currentPage - 1) * currentPerPage)
+                .Take(currentPerPage)
+                .ToList();
 
             return new PagedResponse<TDto>
             {
-                TotalCount = query.Count(),
+                TotalCount = totalCount,
                 CurrentPage = currentPage,
                 PerPage = currentPerPage,
-                Items = query
-                    .Skip((currentPage - 1) * currentPerPage)
-                    .Take(currentPerPage)
-                    .ToList()
+                Items = items
             };
         }
     }
-
 }
