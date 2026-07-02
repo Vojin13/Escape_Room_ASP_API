@@ -16,7 +16,7 @@ namespace Implementation.UseCases.Queries.Rooms
 
         public string Id => "get-room-availability";
 
-        public IEnumerable<TimeslotAvailabilityDTO> Execute(RoomAvailabilityDTO request)
+        public IEnumerable<TimeslotDTO> Execute(RoomAvailabilityDTO request)
         {
             var date = DateTime.SpecifyKind(request.Date.Date, DateTimeKind.Utc);
             var nextDay = date.AddDays(1);
@@ -36,7 +36,7 @@ namespace Implementation.UseCases.Queries.Rooms
                          && b.BookingDate >= date && b.BookingDate < nextDay
                          && (b.StatusId == (int)BookingStatus.Pending || b.StatusId == (int)BookingStatus.Confirmed))
                 .Select(b => b.TimeslotId)
-                .ToHashSet();
+                .ToList();
 
             var now = DateTime.UtcNow;
             var lockedTimeslotIds = _ctx.TimeslotLocks
@@ -44,27 +44,16 @@ namespace Implementation.UseCases.Queries.Rooms
                           && tl.Date >= date && tl.Date < nextDay
                           && tl.ExpiresAt > now)
                 .Select(tl => tl.TimeslotId)
-                .ToHashSet();
+                .ToList();
 
-            return timeslots.Select(t =>
-            {
-                TimeslotStatus status;
-
-                if (bookedTimeslotIds.Contains(t.Id))
-                    status = TimeslotStatus.Booked;
-                else if (lockedTimeslotIds.Contains(t.Id))
-                    status = TimeslotStatus.Locked;
-                else
-                    status = TimeslotStatus.Available;
-
-                return new TimeslotAvailabilityDTO
+            return timeslots
+                .Where(t => !bookedTimeslotIds.Contains(t.Id) && !lockedTimeslotIds.Contains(t.Id))
+                .Select(t => new TimeslotDTO
                 {
-                    TimeslotId = t.Id,
-                    StartTime = t.StartTime.ToString(@"HH\:mm"),
-                    EndTime = t.EndTime.ToString(@"HH\:mm"),
-                    Status = status.ToString()
-                };
-            });
+                    Id = t.Id,
+                    StartTime = t.StartTime.ToString("HH:mm"),
+                    EndTime = t.EndTime.ToString("HH:mm")
+                });
         }
     }
 }

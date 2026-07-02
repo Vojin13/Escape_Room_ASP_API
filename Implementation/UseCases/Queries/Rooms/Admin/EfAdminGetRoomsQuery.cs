@@ -25,8 +25,7 @@ namespace Implementation.UseCases.Queries.Rooms.Admin
                 .Include(x => x.Images)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(request.Title))
-                query = query.Where(x => x.Title.ToLower().Contains(request.Title.ToLower()));
+            query = query.WhereContainsIgnoreCase(x => x.Title, request.Title);
 
             if (request.DifficultyId.HasValue)
                 query = query.Where(x => x.DifficultyId == request.DifficultyId);

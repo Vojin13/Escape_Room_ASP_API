@@ -50,7 +50,7 @@ namespace Implementation.UseCases.Commands
                 "create-blockade", "delete-blockade", "get-blockades",
                 "delete-review", "get-users", "update-user-role",
                 "get-all-bookings", "seed", "delete-room", "admin-get-rooms", "admin-get-room",
-                "delete-room"
+                "delete-room", "admin-get-users", "admin-get-user", "update-user", "delete-user"
             }).ToList();
 
             _ctx.RoleUseCases.AddRange(userUseCases.Select(uc => new RoleUseCase
