@@ -1,51 +1,49 @@
-﻿using Application.Commands.Rooms;
-using Application.DTO.Rooms;
+using Application.Commands.Timeslots;
 using Application.DTO.Search;
-using Application.Queries.Rooms.Admin;
+using Application.DTO.Timeslot;
+using Application.Queries.Timeslots.Admin;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace API.Controllers.Admin
 {
-    [Route("api/admin/rooms")]
+    [Route("api/admin/timeslots")]
     [ApiController]
-    public class AdminRoomsController : ControllerBase
+    public class AdminTimeslotsController : ControllerBase
     {
         private readonly UseCaseHandler _handler;
 
-        public AdminRoomsController(UseCaseHandler handler)
+        public AdminTimeslotsController(UseCaseHandler handler)
         {
             _handler = handler;
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery] RoomSearchDTO dto,
-                                    [FromServices] IAdminGetRoomsQuery query)
+        public IActionResult Get([FromQuery] TimeslotSearchDTO dto,
+                                 [FromServices] IAdminGetTimeslotsQuery query)
         {
             var result = _handler.ExecuteQuery(query, dto);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetRoom(int id, [FromServices] IAdminGetRoomQuery query)
+        public IActionResult Get(int id, [FromServices] IAdminGetTimeslotQuery query)
         {
             var result = _handler.ExecuteQuery(query, id);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult Post([FromForm] CreateRoomDTO dto,
-                                  [FromServices] ICreateRoomCommand command)
+        public IActionResult Post([FromBody] CreateTimeslotDTO dto,
+                                  [FromServices] ICreateTimeslotCommand command)
         {
             _handler.ExecuteCommand(command, dto);
             return StatusCode(201);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] UpdateRoomDTO dto,
-                                 [FromServices] IUpdateRoomCommand command)
+        public IActionResult Put(int id, [FromBody] UpdateTimeslotDTO dto,
+                                 [FromServices] IUpdateTimeslotCommand command)
         {
             dto.Id = id;
             _handler.ExecuteCommand(command, dto);
@@ -54,7 +52,7 @@ namespace API.Controllers.Admin
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id,
-                           [FromServices] IDeleteRoomCommand command)
+                                    [FromServices] IDeleteTimeslotCommand command)
         {
             _handler.ExecuteCommand(command, id);
             return NoContent();

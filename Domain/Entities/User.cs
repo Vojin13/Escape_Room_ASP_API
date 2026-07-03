@@ -9,6 +9,7 @@
         public DateTime? EmailVerifiedAt { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
+        public bool IsDeleted { get; set; }
 
         public virtual Role Role { get; set; }
         public virtual HashSet<Booking> Bookings { get; set; } = new HashSet<Booking>();

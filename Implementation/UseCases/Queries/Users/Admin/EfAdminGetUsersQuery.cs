@@ -23,7 +23,7 @@ namespace Implementation.UseCases.Queries.Users.Admin
 
         public PagedResponse<UserDTO> Execute(UserSearchDTO request)
         {
-            var query = _ctx.Users.OrderBy(x => x.Id).AsQueryable();
+            var query = _ctx.Users.Where(x => !x.IsDeleted).OrderBy(x => x.Id).AsQueryable();
 
             if(!string.IsNullOrEmpty(request.Keyword))
             { 

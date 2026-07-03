@@ -46,11 +46,11 @@ namespace Implementation.UseCases.Commands
 
             var adminUseCases = userUseCases.Concat(new List<string>
             {
-                "create-room", "update-room", "toggle-room-active",
-                "create-blockade", "delete-blockade", "get-blockades",
-                "delete-review", "get-users", "update-user-role",
-                "get-all-bookings", "seed", "delete-room", "admin-get-rooms", "admin-get-room",
-                "delete-room", "admin-get-users", "admin-get-user", "update-user", "delete-user"
+                "create-room", "update-room", "toggle-room-active", "delete-room",
+                "admin-get-rooms", "admin-get-room",
+                "delete-review", "get-all-bookings", "seed",
+                "admin-get-users", "admin-get-user", "create-user", "update-user", "delete-user",
+                "get-timeslots", "get-timeslot", "create-timeslot", "update-timeslot", "delete-timeslot"
             }).ToList();
 
             _ctx.RoleUseCases.AddRange(userUseCases.Select(uc => new RoleUseCase

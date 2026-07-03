@@ -11,7 +11,7 @@ namespace Implementation.UseCases
             _ctx = context;
         }
 
-        protected void AssignRoleUseCases(int userId, int roleId)
+        protected void  AssignRoleUseCases(int userId, int roleId)
         {
             var roleUseCases = _ctx.RoleUseCases
                 .Where(r => r.RoleId == roleId)

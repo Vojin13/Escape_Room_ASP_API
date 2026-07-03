@@ -1,4 +1,6 @@
-﻿using Application.DTO.Search;
+﻿using Application.Commands.Users;
+using Application.DTO.Search;
+using Application.DTO.Users;
 using Application.Queries.Users.Admin;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Mvc;
@@ -29,27 +31,40 @@ namespace API.Controllers.Admin
 
         // GET api/<AdminUserController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id,
+                                 [FromServices] IAdminGetUserQuery query)
         {
-            return "value";
+            var result = _handler.ExecuteQuery(query, id);
+            return Ok(result);
         }
 
         // POST api/<AdminUserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] CreateUserDTO dto,
+                         [FromServices] ICreateUserCommand command)
         {
+            _handler.ExecuteCommand(command, dto);
+            return Created();
         }
 
         // PUT api/<AdminUserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id,
+                                 [FromBody] UpdateUserDTO dto,
+                                 [FromServices] IUpdateUserCommand command)
         {
+            dto.Id = id;
+            _handler.ExecuteCommand(command, dto);
+            return NoContent();
         }
 
         // DELETE api/<AdminUserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id,
+                                    [FromServices] IDeleteUserCommand command)
         {
+            _handler.ExecuteCommand(command, id);
+            return NoContent();
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Implementation.UseCases.Queries.Auth
                 .Include(x => x.UserUseCases)
                 .FirstOrDefault(x => x.Email == request.Email);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (user == null || user.IsDeleted || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 throw new InvalidCredentialsException();
             }

@@ -15,9 +15,17 @@ using Implementation.UseCases.Commands.Rooms;
 using Implementation.UseCases.Queries.Auth;
 using Implementation.UseCases.Validators.Auth;
 using Implementation.UseCases.Validators.Rooms;
+using Implementation.UseCases.Validators.Users;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Queries.Users.Admin;
 using Implementation.UseCases.Queries.Users.Admin;
+using Application.Commands.Users;
+using Implementation.UseCases.Commands.Users.Admin;
+using Application.Queries.Timeslots.Admin;
+using Implementation.UseCases.Queries.Timeslots.Admin;
+using Application.Commands.Timeslots;
+using Implementation.UseCases.Commands.Timeslots.Admin;
+using Implementation.UseCases.Validators.Timeslots;
 
 public static class DependencyInjection
 {
@@ -31,6 +39,10 @@ public static class DependencyInjection
         services.AddTransient<RegisterUserValidator>();
         services.AddTransient<CreateRoomValidator>();
         services.AddTransient<UpdateRoomValidator>();
+        services.AddTransient<CreateUserValidator>();
+        services.AddTransient<UpdateUserValidator>();
+        services.AddTransient<CreateTimeslotValidator>();
+        services.AddTransient<UpdateTimeslotValidator>();
 
         // Commands
         services.AddTransient<IRegisterUserCommand, EfRegisterUserCommand>();
@@ -39,6 +51,12 @@ public static class DependencyInjection
         services.AddTransient<IDeleteRoomCommand, EfDeleteRoomCommand>();
         services.AddTransient<ICreateRoomCommand, EfCreateRoomCommand>();
         services.AddTransient<IUpdateRoomCommand, EfUpdateRoomCommand>();
+        services.AddTransient<IDeleteUserCommand, EfDeleteUserCommand>();
+        services.AddTransient<ICreateUserCommand, EfCreateUserCommand>();
+        services.AddTransient<IUpdateUserCommand, EfUpdateUserCommand>();
+        services.AddTransient<ICreateTimeslotCommand, EfCreateTimeslotCommand>();
+        services.AddTransient<IUpdateTimeslotCommand, EfUpdateTimeslotCommand>();
+        services.AddTransient<IDeleteTimeslotCommand, EfDeleteTimeslotCommand>();
 
         // Queries
         services.AddTransient<ILoginUserQuery, EfLoginUserQuery>();
@@ -50,6 +68,9 @@ public static class DependencyInjection
         services.AddTransient<IAdminGetRoomQuery, EfAdminGetRoomQuery>();
         services.AddTransient<IGetMyProfileQuery, EfGetMyProfileQuery>();
         services.AddTransient<IAdminGetUsersQuery, EfAdminGetUsersQuery>();
+        services.AddTransient<IAdminGetUserQuery, EfAdminGetUserQuery>();
+        services.AddTransient<IAdminGetTimeslotsQuery, EfAdminGetTimeslotsQuery>();
+        services.AddTransient<IAdminGetTimeslotQuery, EfAdminGetTimeslotQuery>();
 
         return services;
     }
