@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 CLAUDE.md
 wwwroot/
+
+# Local secrets (SMTP app password, DB connection string, JWT signing key)
+API/appsettings.Development.json

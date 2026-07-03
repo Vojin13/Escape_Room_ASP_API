@@ -41,7 +41,7 @@ namespace Implementation.UseCases.Commands
                 "lock-timeslot", "create-booking", "cancel-booking",
                 "create-review", "get-my-bookings", "get-booking",
                 "get-room-reviews", "get-my-profile", "update-my-profile",
-                "logout", "register-user", "login", "refresh-token"
+                "logout", "register-user", "login", "refresh-token", "account-activate"
             };
 
             var adminUseCases = userUseCases.Concat(new List<string>

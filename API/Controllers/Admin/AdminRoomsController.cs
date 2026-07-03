@@ -35,6 +35,14 @@ namespace API.Controllers.Admin
             return Ok(result);
         }
 
+        [HttpPatch("{id}/toggle-active")]
+        public IActionResult ToggleActive(int id, 
+                                          [FromServices] IToggleRoomActiveCommand command)
+        {
+            _handler.ExecuteCommand(command, id);
+            return NoContent();
+        }
+
         [HttpPost]
         public IActionResult Post([FromForm] CreateRoomDTO dto,
                                   [FromServices] ICreateRoomCommand command)

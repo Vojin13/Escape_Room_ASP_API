@@ -7,6 +7,7 @@
         public IEnumerable<string> ApiKeys { get; set; }
         public JwtSettings JwtSettings { get; set; }
         public ConnectionStrings ConnectionStrings { get; set; }
+        public MailSettings MailSettings { get; set; }
 
     }
 
@@ -21,5 +22,11 @@
         public string Issuer { get; set; }
         public int DurationSeconds { get; set; }
         public int RefreshTokenHours { get; set; }
+    }
+
+    public class MailSettings
+    {
+        public string FromEmail { get; set; }
+        public string AppPassword { get; set; }
     }
 }

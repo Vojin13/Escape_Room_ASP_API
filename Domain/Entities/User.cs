@@ -7,6 +7,7 @@
         public string LastName { get; set; }
         public string Email { get; set; }
         public DateTime? EmailVerifiedAt { get; set; }
+        public Guid? EmailVerificationToken { get; set; }
         public string Password { get; set; }
         public int RoleId { get; set; }
         public bool IsDeleted { get; set; }

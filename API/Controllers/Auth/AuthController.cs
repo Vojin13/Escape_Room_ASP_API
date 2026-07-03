@@ -50,5 +50,13 @@ namespace API.Controllers.Auth
             var result = _handler.ExecuteQuery(query, dto);
             return Ok(result);
         }
+
+        [HttpPost("activate")]
+        public IActionResult Activate([FromQuery] string code,
+                             [FromServices] IActivateAccountCommand command)
+        {
+            _handler.ExecuteCommand(command, code);
+            return NoContent();
+        }
     }
 }

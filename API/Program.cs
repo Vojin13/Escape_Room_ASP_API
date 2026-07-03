@@ -1,7 +1,9 @@
 using API.Extensions;
 using Application;
+using Application.Emails;
 using ASPLAB2.API;
 using ASPLAB2.API.JWT;
+using Implementation.Emails;
 using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,9 @@ builder.Services.AddInfrastructure(settings.ConnectionStrings.DefaultConnection)
 builder.Services.AddImplementation();
 builder.Services.AddJwt(settings);
 builder.Services.AddTransient<IJwtHandler, JwtHandler>();
+builder.Services.AddTransient<IEmailSender>(_ => new SmtpEmailSender(
+    settings.MailSettings.FromEmail,
+    settings.MailSettings.AppPassword));
 builder.Services.AddApplicationUser();
 builder.Services.AddCors(options =>
 {

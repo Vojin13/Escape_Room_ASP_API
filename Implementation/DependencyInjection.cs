@@ -26,6 +26,12 @@ using Implementation.UseCases.Queries.Timeslots.Admin;
 using Application.Commands.Timeslots;
 using Implementation.UseCases.Commands.Timeslots.Admin;
 using Implementation.UseCases.Validators.Timeslots;
+using Implementation.Emails;
+using Application.Commands.Bookings;
+using Implementation.UseCases.Commands.Bookings;
+using Application.Queries.Bookings;
+using Implementation.UseCases.Queries.Bookings;
+using Implementation.UseCases.Validators.Bookings;
 
 public static class DependencyInjection
 {
@@ -43,6 +49,8 @@ public static class DependencyInjection
         services.AddTransient<UpdateUserValidator>();
         services.AddTransient<CreateTimeslotValidator>();
         services.AddTransient<UpdateTimeslotValidator>();
+        services.AddTransient<EmailTemplateComposer>();
+        services.AddTransient<CreateBookingValidator>();
 
         // Commands
         services.AddTransient<IRegisterUserCommand, EfRegisterUserCommand>();
@@ -57,6 +65,9 @@ public static class DependencyInjection
         services.AddTransient<ICreateTimeslotCommand, EfCreateTimeslotCommand>();
         services.AddTransient<IUpdateTimeslotCommand, EfUpdateTimeslotCommand>();
         services.AddTransient<IDeleteTimeslotCommand, EfDeleteTimeslotCommand>();
+        services.AddTransient<IToggleRoomActiveCommand, EfToggleRoomActiveCommand>();
+        services.AddTransient<IActivateAccountCommand, EfActivateAccountCommand>();
+        services.AddTransient<ICreateBookingCommand, EfCreateBookingCommand>();
 
         // Queries
         services.AddTransient<ILoginUserQuery, EfLoginUserQuery>();
@@ -71,6 +82,7 @@ public static class DependencyInjection
         services.AddTransient<IAdminGetUserQuery, EfAdminGetUserQuery>();
         services.AddTransient<IAdminGetTimeslotsQuery, EfAdminGetTimeslotsQuery>();
         services.AddTransient<IAdminGetTimeslotQuery, EfAdminGetTimeslotQuery>();
+        services.AddTransient<ILockTimeslotQuery, EfLockTimeslotQuery>();
 
         return services;
     }
