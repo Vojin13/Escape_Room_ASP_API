@@ -41,7 +41,8 @@ namespace Implementation.UseCases.Commands
                 "lock-timeslot", "create-booking", "cancel-booking",
                 "create-review", "get-my-bookings", "get-booking",
                 "get-room-reviews", "get-my-profile", "update-my-profile",
-                "logout", "register-user", "login", "refresh-token", "account-activate"
+                "logout", "register-user", "login", "refresh-token", "account-activate",
+                "get-difficulties", "get-booking-statuses"
             };
 
             var adminUseCases = userUseCases.Concat(new List<string>
@@ -50,7 +51,8 @@ namespace Implementation.UseCases.Commands
                 "admin-get-rooms", "admin-get-room",
                 "delete-review", "get-all-bookings", "seed",
                 "admin-get-users", "admin-get-user", "create-user", "update-user", "delete-user",
-                "get-timeslots", "get-timeslot", "create-timeslot", "update-timeslot", "delete-timeslot"
+                "get-timeslots", "get-timeslot", "create-timeslot", "update-timeslot", "delete-timeslot",
+                "admin-get-error-logs", "update-booking-status"
             }).ToList();
 
             _ctx.RoleUseCases.AddRange(userUseCases.Select(uc => new RoleUseCase

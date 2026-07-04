@@ -1,4 +1,5 @@
-﻿using Application.DTO.Rooms;
+﻿using Application.DTO;
+using Application.DTO.Rooms;
 using Application.DTO.Search;
 using Application.Queries.Rooms;
 using Implementation.UseCases;
@@ -46,6 +47,13 @@ namespace API.Controllers
                 RoomId = id,
                 Date = date
             });
+            return Ok(result);
+        }
+
+        [HttpGet("difficulties")]
+        public IActionResult GetDifficulties([FromServices] IGetDifficultiesQuery query)
+        {
+            var result = _handler.ExecuteQuery(query, NoData.Instance);
             return Ok(result);
         }
     }

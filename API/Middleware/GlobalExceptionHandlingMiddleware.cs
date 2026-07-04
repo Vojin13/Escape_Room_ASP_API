@@ -1,4 +1,5 @@
-﻿using Application.Exceptions;
+﻿using Application;
+using Application.Exceptions;
 using Domain.Entities;
 using FluentValidation;
 using Implementation;
@@ -65,6 +66,8 @@ public class GlobalExceptionHandlingMiddleware
             var supportCode = Guid.NewGuid();
 
             var dbContext = context.RequestServices.GetRequiredService<AppDbContext>();
+            var applicationUser = context.RequestServices.GetRequiredService<IApplicationUser>();
+
             dbContext.ErrorLogs.Add(new ErrorLog
             {
                 SupportCode = supportCode,
@@ -72,6 +75,7 @@ public class GlobalExceptionHandlingMiddleware
                 File = ex.StackTrace,
                 Url = context.Request.Path,
                 Method = context.Request.Method,
+                UserId = applicationUser.Id != 0 ? applicationUser.Id : null,
                 CreatedAt = DateTime.UtcNow
             });
             await dbContext.SaveChangesAsync();

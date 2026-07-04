@@ -32,6 +32,11 @@ using Implementation.UseCases.Commands.Bookings;
 using Application.Queries.Bookings;
 using Implementation.UseCases.Queries.Bookings;
 using Implementation.UseCases.Validators.Bookings;
+using Application.Queries.ErrorLogs.Admin;
+using Implementation.UseCases.Queries.ErrorLogs.Admin;
+using Application.Queries.Bookings.Admin;
+using Implementation.UseCases.Queries.Bookings.Admin;
+using Implementation.UseCases.Commands.Bookings.Admin;
 
 public static class DependencyInjection
 {
@@ -51,6 +56,7 @@ public static class DependencyInjection
         services.AddTransient<UpdateTimeslotValidator>();
         services.AddTransient<EmailTemplateComposer>();
         services.AddTransient<CreateBookingValidator>();
+        services.AddTransient<UpdateBookingStatusValidator>();
 
         // Commands
         services.AddTransient<IRegisterUserCommand, EfRegisterUserCommand>();
@@ -68,6 +74,9 @@ public static class DependencyInjection
         services.AddTransient<IToggleRoomActiveCommand, EfToggleRoomActiveCommand>();
         services.AddTransient<IActivateAccountCommand, EfActivateAccountCommand>();
         services.AddTransient<ICreateBookingCommand, EfCreateBookingCommand>();
+        services.AddTransient<ICancelBookingCommand, EfCancelBookingCommand>();
+        services.AddTransient<IGetMyBookingsQuery, EfGetMyBookingsQuery>();
+        services.AddTransient<IUpdateBookingStatusCommand, EfUpdateBookingStatusCommand>();
 
         // Queries
         services.AddTransient<ILoginUserQuery, EfLoginUserQuery>();
@@ -83,6 +92,11 @@ public static class DependencyInjection
         services.AddTransient<IAdminGetTimeslotsQuery, EfAdminGetTimeslotsQuery>();
         services.AddTransient<IAdminGetTimeslotQuery, EfAdminGetTimeslotQuery>();
         services.AddTransient<ILockTimeslotQuery, EfLockTimeslotQuery>();
+        services.AddTransient<IGetDifficultiesQuery, EfGetDifficultiesQuery>();
+        services.AddTransient<IGetBookingStatusesQuery, EfGetBookingStatusesQuery>();
+        services.AddTransient<IAdminGetErrorLogsQuery, EfAdminGetErrorLogsQuery>();
+        services.AddTransient<IGetBookingQuery, EfGetBookingQuery>();
+        services.AddTransient<IAdminGetBookingsQuery, EfAdminGetBookingsQuery>();
 
         return services;
     }

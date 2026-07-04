@@ -58,8 +58,6 @@ namespace Implementation.UseCases.Queries.Bookings
                 throw new ConflictException("Timeslot is already locked by another user.");
             }
 
-            // A user can only hold one active lock at a time — picking a different slot
-            // releases whatever they were previously holding.
             var otherLocks = _ctx.TimeslotLocks
                 .Where(x => x.UserId == request.UserId && x.ExpiresAt > now
                 && !(x.RoomId == request.RoomId && x.TimeslotId == request.TimeslotId && x.Date == date))
