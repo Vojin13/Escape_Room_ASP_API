@@ -23,6 +23,11 @@ namespace Implementation.UseCases.Queries.AuditLogs
             query = query.WhereContainsIgnoreCaseAny(request.Keyword,
                 x => x.User.Username, x => x.User.Email, x => x.UseCaseName, x => x.UseCaseId);
 
+            if (!string.IsNullOrEmpty(request.Method))
+            {
+                query = query.Where(x => x.Method == request.Method.ToUpper());
+            }
+
             if (request.DateFrom.HasValue)
             {
                 var from = DateTime.SpecifyKind(request.DateFrom.Value.Date, DateTimeKind.Utc);
@@ -47,6 +52,8 @@ namespace Implementation.UseCases.Queries.AuditLogs
                 UseCaseId = x.UseCaseId,
                 UseCaseName = x.UseCaseName,
                 WasAuthorized = x.WasAuthorized,
+                Method = x.Method,
+                ElapsedMs = x.ElapsedMs,
                 CreatedAt = x.CreatedAt
             }).ToPagedResponse(request.Page, request.PerPage);
         }

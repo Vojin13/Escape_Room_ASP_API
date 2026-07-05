@@ -1,6 +1,7 @@
 ﻿using Application;
 using Application.Exceptions;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 
 namespace Implementation.UseCases
@@ -10,41 +11,53 @@ namespace Implementation.UseCases
 
         private IApplicationUser _user;
         private AppDbContext _ctx;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public UseCaseHandler(IApplicationUser user, AppDbContext ctx)
+        public UseCaseHandler(IApplicationUser user, AppDbContext ctx, IHttpContextAccessor httpContextAccessor)
         {
             _user = user;
             _ctx = ctx;
+            _httpContextAccessor = httpContextAccessor;
         }
-        private void HandleAuthorization(IUseCase useCase)
-        {
-            bool isAuthorized = _user.AllowedUseCases.Contains(useCase.Id);
 
+        private void LogAttempt(IUseCase useCase, bool wasAuthorized, long? elapsedMs)
+        {
             _ctx.AuditLogs.Add(new AuditLog
             {
                 UserId = _user.Id != 0 ? _user.Id : null,
                 UseCaseId = useCase.Id,
                 UseCaseName = useCase.Name,
-                WasAuthorized = isAuthorized
+                WasAuthorized = wasAuthorized,
+                Method = _httpContextAccessor.HttpContext?.Request?.Method,
+                ElapsedMs = elapsedMs
             });
             _ctx.SaveChanges();
+        }
 
-            if (!isAuthorized)
+        private void EnsureAuthorized(IUseCase useCase)
+        {
+            if (!_user.AllowedUseCases.Contains(useCase.Id))
             {
+                LogAttempt(useCase, wasAuthorized: false, elapsedMs: null);
                 throw new UnauthorizedUseCaseException(_user.Username, useCase.Name);
             }
         }
+
         public void ExecuteCommand<TRequest>(ICommand<TRequest> command, TRequest request)
         {
-            HandleAuthorization(command);
+            EnsureAuthorized(command);
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
-            stopwatch.Start();
-
-            command.Execute(request);
-
-            stopwatch.Stop();
+            try
+            {
+                command.Execute(request);
+            }
+            finally
+            {
+                stopwatch.Stop();
+                LogAttempt(command, wasAuthorized: true, elapsedMs: stopwatch.ElapsedMilliseconds);
+            }
 
             Console.WriteLine($"{_user.Username} has executed use case: {command.Name}" + stopwatch.ElapsedMilliseconds + " ms.");
         }
@@ -52,14 +65,20 @@ namespace Implementation.UseCases
         public TResult ExecuteQuery<TParam, TResult>(IQuery<TParam, TResult> query, TParam request)
             where TResult : class
         {
-            HandleAuthorization(query);
+            EnsureAuthorized(query);
+
             Stopwatch stopwatch = Stopwatch.StartNew();
+            TResult result;
 
-            stopwatch.Start();
-
-            var result = query.Execute(request);
-
-            stopwatch.Stop();
+            try
+            {
+                result = query.Execute(request);
+            }
+            finally
+            {
+                stopwatch.Stop();
+                LogAttempt(query, wasAuthorized: true, elapsedMs: stopwatch.ElapsedMilliseconds);
+            }
 
             Console.WriteLine($"{_user.Username} has executed use case: {query.Name}" + stopwatch.ElapsedMilliseconds + " ms.");
 
