@@ -1,4 +1,5 @@
-﻿using Application.Commands.Reviews;
+﻿using Application;
+using Application.Commands.Reviews;
 using Application.DTO.Reviews;
 using Application.Exceptions;
 using Domain.Entities;
@@ -13,10 +14,12 @@ namespace Implementation.UseCases.Commands.Reviews
     public class EfCreateReviewCommand : EfUseCase, ICreateReviewCommand
     {
         private readonly CreateReviewValidator _validator;
+        private readonly IApplicationUser _user;
 
-        public EfCreateReviewCommand(AppDbContext context, CreateReviewValidator validator) : base(context)
+        public EfCreateReviewCommand(AppDbContext context, CreateReviewValidator validator, IApplicationUser user) : base(context)
         {
             _validator = validator;
+            _user = user;
         }
 
         public string Name => "Create Review";
@@ -27,7 +30,7 @@ namespace Implementation.UseCases.Commands.Reviews
         {
             _validator.ValidateAndThrow(data);
 
-            var booking = _ctx.Bookings.FirstOrDefault(b => b.UserId == data.UserId
+            var booking = _ctx.Bookings.FirstOrDefault(b => b.UserId == _user.Id
                                                           && b.RoomId == data.RoomId
                                                           && b.StatusId == (int)BookingStatus.Completed);
 
@@ -43,7 +46,7 @@ namespace Implementation.UseCases.Commands.Reviews
 
             var review = new Review
             {
-                UserId = data.UserId,
+                UserId = _user.Id,
                 RoomId = data.RoomId,
                 Rating = data.Rating,
                 Comment = data.Comment

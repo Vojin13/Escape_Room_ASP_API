@@ -14,9 +14,6 @@ namespace Implementation.UseCases.Validators.Bookings
             this.RuleLevelCascadeMode = CascadeMode.Stop;
             _ctx = ctx;
 
-            RuleFor(x => x.UserId)
-                .NotEmpty().WithMessage(Required);
-
             RuleFor(x => x.RoomId)
                 .NotEmpty().WithMessage(Required);
 

@@ -1,3 +1,5 @@
+using Application;
+using Application.DTO;
 using Application.DTO.Users;
 using Application.Exceptions;
 using Application.Queries.Users;
@@ -7,22 +9,25 @@ namespace Implementation.UseCases.Queries.Users
 {
     public class EfGetMyProfileQuery : EfUseCase, IGetMyProfileQuery
     {
-        public EfGetMyProfileQuery(AppDbContext context) : base(context)
+        private readonly IApplicationUser _currentUser;
+
+        public EfGetMyProfileQuery(AppDbContext context, IApplicationUser currentUser) : base(context)
         {
+            _currentUser = currentUser;
         }
 
         public string Name => "Get My Profile";
 
         public string Id => "get-my-profile";
 
-        public UserDetailsDTO Execute(int userId)
+        public UserDetailsDTO Execute(NoData data)
         {
             var user = _ctx.Users
                 .Include(x => x.Role)
-                .FirstOrDefault(x => x.Id == userId);
+                .FirstOrDefault(x => x.Id == _currentUser.Id);
 
             if (user == null)
-                throw new NotFoundException("User", userId);
+                throw new NotFoundException("User", _currentUser.Id);
 
             return new UserDetailsDTO
             {

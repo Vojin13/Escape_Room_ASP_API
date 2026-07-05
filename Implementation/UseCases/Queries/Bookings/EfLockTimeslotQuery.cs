@@ -1,4 +1,5 @@
-﻿using Application.DTO.Bookings;
+﻿using Application;
+using Application.DTO.Bookings;
 using Application.Exceptions;
 using Application.Queries.Bookings;
 using Domain.Entities;
@@ -9,8 +10,11 @@ namespace Implementation.UseCases.Queries.Bookings
 {
     public class EfLockTimeslotQuery : EfUseCase, ILockTimeslotQuery
     {
-        public EfLockTimeslotQuery(AppDbContext context) : base(context)
+        private readonly IApplicationUser _user;
+
+        public EfLockTimeslotQuery(AppDbContext context, IApplicationUser user) : base(context)
         {
+            _user = user;
         }
 
         public string Name => "Lock Timeslot";
@@ -53,13 +57,13 @@ namespace Implementation.UseCases.Queries.Bookings
                 && x.TimeslotId == request.TimeslotId
                 && x.Date == date && x.ExpiresAt > now);
 
-            if(existingLock != null && existingLock.UserId != request.UserId)
+            if(existingLock != null && existingLock.UserId != _user.Id)
             {
                 throw new ConflictException("Timeslot is already locked by another user.");
             }
 
             var otherLocks = _ctx.TimeslotLocks
-                .Where(x => x.UserId == request.UserId && x.ExpiresAt > now
+                .Where(x => x.UserId == _user.Id && x.ExpiresAt > now
                 && !(x.RoomId == request.RoomId && x.TimeslotId == request.TimeslotId && x.Date == date))
                 .ToList();
 
@@ -86,7 +90,7 @@ namespace Implementation.UseCases.Queries.Bookings
                 RoomId = request.RoomId,
                 Date = date,
                 ExpiresAt = now.AddMinutes(5),
-                UserId = request.UserId,
+                UserId = _user.Id,
                 TimeslotId = request.TimeslotId,
             };
 

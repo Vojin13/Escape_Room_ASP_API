@@ -1,4 +1,5 @@
-﻿using Application.DTO.Bookings;
+﻿using Application;
+using Application.DTO.Bookings;
 using Application.Exceptions;
 using Application.Queries.Bookings;
 using System;
@@ -11,8 +12,11 @@ namespace Implementation.UseCases.Queries.Bookings
 {
     public class EfGetBookingQuery : EfUseCase, IGetBookingQuery
     {
-        public EfGetBookingQuery(AppDbContext context) : base(context)
+        private readonly IApplicationUser _user;
+
+        public EfGetBookingQuery(AppDbContext context, IApplicationUser user) : base(context)
         {
+            _user = user;
         }
 
         public string Name => "Get Booking";
@@ -22,7 +26,7 @@ namespace Implementation.UseCases.Queries.Bookings
         public BookingDTO Execute(GetBookingDTO request)
         {
             var booking = _ctx.Bookings.FirstOrDefault(x => x.Id == request.BookingId
-                                                       && x.UserId == request.UserId);
+                                                       && x.UserId == _user.Id);
 
             if(booking == null)
             {

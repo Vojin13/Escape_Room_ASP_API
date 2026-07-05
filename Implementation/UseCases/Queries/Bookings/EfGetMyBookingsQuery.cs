@@ -1,4 +1,5 @@
-﻿using Application.DTO;
+﻿using Application;
+using Application.DTO;
 using Application.DTO.Bookings;
 using Application.DTO.Search;
 using Application.Extensions;
@@ -14,8 +15,11 @@ namespace Implementation.UseCases.Queries.Bookings
 {
     public class EfGetMyBookingsQuery : EfUseCase, IGetMyBookingsQuery
     {
-        public EfGetMyBookingsQuery(AppDbContext context) : base(context)
+        private readonly IApplicationUser _user;
+
+        public EfGetMyBookingsQuery(AppDbContext context, IApplicationUser user) : base(context)
         {
+            _user = user;
         }
 
         public string Name => "Get My Bookings";
@@ -25,7 +29,7 @@ namespace Implementation.UseCases.Queries.Bookings
         public PagedResponse<BookingDTO> Execute(MyBookingSearchDTO request)
         {
             var query = _ctx.Bookings
-                                .Where(x => x.UserId == request.UserId)
+                                .Where(x => x.UserId == _user.Id)
                                 .AsQueryable();
 
             if (request.StatusId.HasValue)

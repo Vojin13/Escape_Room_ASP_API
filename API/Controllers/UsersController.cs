@@ -1,4 +1,4 @@
-using Application;
+using Application.DTO;
 using Application.Queries.Users;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +17,9 @@ namespace API.Controllers
         }
 
         [HttpGet("me")]
-        public IActionResult GetMyProfile([FromServices] IGetMyProfileQuery query,
-                                          [FromServices] IApplicationUser user)
+        public IActionResult GetMyProfile([FromServices] IGetMyProfileQuery query)
         {
-            var result = _handler.ExecuteQuery(query, user.Id);
+            var result = _handler.ExecuteQuery(query, NoData.Instance);
             return Ok(result);
         }
     }

@@ -44,7 +44,7 @@ namespace API.Controllers.Admin
                          [FromServices] ICreateUserCommand command)
         {
             _handler.ExecuteCommand(command, dto);
-            return Created();
+            return StatusCode(201);
         }
 
         // PUT api/<AdminUserController>/5

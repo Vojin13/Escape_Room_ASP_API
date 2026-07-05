@@ -1,5 +1,4 @@
-﻿using Application;
-using Application.Commands.Reviews;
+﻿using Application.Commands.Reviews;
 using Application.DTO.Reviews;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +22,8 @@ namespace API.Controllers
         // POST api/<ReviewsController>
         [HttpPost]
         public IActionResult Post([FromBody] CreateReviewDTO dto,
-                                  [FromServices] ICreateReviewCommand command,
-                                  [FromServices] IApplicationUser user)
+                                  [FromServices] ICreateReviewCommand command)
         {
-            dto.UserId = user.Id;
             _handler.ExecuteCommand(command, dto);
             return StatusCode(201);
         }

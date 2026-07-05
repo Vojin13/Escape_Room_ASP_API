@@ -1,4 +1,5 @@
-﻿using Application.DTO.Reviews;
+﻿using Application;
+using Application.DTO.Reviews;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Implementation.UseCases.Validators.Reviews
 {
     public class CreateReviewValidator : BaseValidator<CreateReviewDTO>
     {
-        public CreateReviewValidator(AppDbContext ctx)
+        public CreateReviewValidator(AppDbContext ctx, IApplicationUser user)
         {
             RuleFor(x => x.Rating)
                 .NotEmpty().WithMessage(Required)
@@ -21,7 +22,7 @@ namespace Implementation.UseCases.Validators.Reviews
                 .WithMessage("Comment cannot exceed 1000 characters.");
 
             RuleFor(x => x)
-                .Must(dto => !ctx.Reviews.Any(r => r.UserId == dto.UserId && r.RoomId == dto.RoomId))
+                .Must(dto => !ctx.Reviews.Any(r => r.UserId == user.Id && r.RoomId == dto.RoomId))
                 .WithMessage("You have already reviewed this room.");
         }
     }

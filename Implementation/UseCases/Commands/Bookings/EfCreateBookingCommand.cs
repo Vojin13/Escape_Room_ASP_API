@@ -1,4 +1,5 @@
-﻿using Application.Commands.Bookings;
+﻿using Application;
+using Application.Commands.Bookings;
 using Application.DTO.Bookings;
 using Application.Exceptions;
 using Domain.Entities;
@@ -13,12 +14,15 @@ namespace Implementation.UseCases.Commands.Bookings
     public class EfCreateBookingCommand : EfUseCase, ICreateBookingCommand
     {
         private readonly CreateBookingValidator _validator;
+        private readonly IApplicationUser _user;
 
         public EfCreateBookingCommand(AppDbContext context,
-                                      CreateBookingValidator validator)
+                                      CreateBookingValidator validator,
+                                      IApplicationUser user)
                                       : base(context)
         {
             _validator = validator;
+            _user = user;
         }
 
         public string Name => "Create Booking";
@@ -49,7 +53,7 @@ namespace Implementation.UseCases.Commands.Bookings
             var activeLock = _ctx.TimeslotLocks
                             .FirstOrDefault(x => x.RoomId == data.RoomId 
                             && x.TimeslotId == data.TimeslotId
-                            && x.Date == date && x.UserId == data.UserId 
+                            && x.Date == date && x.UserId == _user.Id 
                             && x.ExpiresAt > now);
 
             if(activeLock == null)
@@ -63,7 +67,7 @@ namespace Implementation.UseCases.Commands.Bookings
                 TimeslotId = data.TimeslotId,
                 BookingDate = date,
                 NumberOfPlayers = data.NumberOfPlayers,
-                UserId = data.UserId,
+                UserId = _user.Id,
                 TotalPrice = room.PricePerPerson * data.NumberOfPlayers,
                 StatusId = (int)BookingStatus.Pending,
             };

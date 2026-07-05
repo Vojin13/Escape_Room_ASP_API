@@ -1,4 +1,5 @@
-﻿using Application.Commands.Bookings;
+﻿using Application;
+using Application.Commands.Bookings;
 using Application.DTO.Bookings;
 using Application.Exceptions;
 using Domain.Enums;
@@ -12,8 +13,11 @@ namespace Implementation.UseCases.Commands.Bookings
 {
     public class EfCancelBookingCommand : EfUseCase, ICancelBookingCommand
     {
-        public EfCancelBookingCommand(AppDbContext context) : base(context)
+        private readonly IApplicationUser _user;
+
+        public EfCancelBookingCommand(AppDbContext context, IApplicationUser user) : base(context)
         {
+            _user = user;
         }
 
         public string Name => "Cancel booking";
@@ -23,7 +27,7 @@ namespace Implementation.UseCases.Commands.Bookings
         public void Execute(CancelBookingDTO data)
         {
             var booking = _ctx.Bookings.FirstOrDefault(x => x.Id == data.BookingId
-                                                       && x.UserId == data.UserId);
+                                                       && x.UserId == _user.Id);
 
             if(booking == null)
             {
