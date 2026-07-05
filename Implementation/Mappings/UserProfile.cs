@@ -1,5 +1,6 @@
 using Application.DTO.Auth;
 using Application.DTO.Rooms;
+using Application.DTO.Users;
 using AutoMapper;
 using Domain.Entities;
 
@@ -11,6 +12,8 @@ namespace Implementation.Mappings
         {
             CreateMap<RegisterUserDTO, User>()
                 .ForMember(dest => dest.RoleId, opt => opt.Ignore());
+
+            CreateMap<CreateUserDTO, User>();
         }
     }
 }

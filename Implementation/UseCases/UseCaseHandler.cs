@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.Exceptions;
+using Domain.Entities;
 using System.Diagnostics;
 
 namespace Implementation.UseCases
@@ -8,14 +9,27 @@ namespace Implementation.UseCases
     {
 
         private IApplicationUser _user;
+        private AppDbContext _ctx;
 
-        public UseCaseHandler(IApplicationUser user)
+        public UseCaseHandler(IApplicationUser user, AppDbContext ctx)
         {
             _user = user;
+            _ctx = ctx;
         }
         private void HandleAuthorization(IUseCase useCase)
         {
-            if (!_user.AllowedUseCases.Contains(useCase.Id))
+            bool isAuthorized = _user.AllowedUseCases.Contains(useCase.Id);
+
+            _ctx.AuditLogs.Add(new AuditLog
+            {
+                UserId = _user.Id != 0 ? _user.Id : null,
+                UseCaseId = useCase.Id,
+                UseCaseName = useCase.Name,
+                WasAuthorized = isAuthorized
+            });
+            _ctx.SaveChanges();
+
+            if (!isAuthorized)
             {
                 throw new UnauthorizedUseCaseException(_user.Username, useCase.Name);
             }

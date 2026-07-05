@@ -37,6 +37,13 @@ using Implementation.UseCases.Queries.ErrorLogs.Admin;
 using Application.Queries.Bookings.Admin;
 using Implementation.UseCases.Queries.Bookings.Admin;
 using Implementation.UseCases.Commands.Bookings.Admin;
+using Application.Commands.Reviews;
+using Implementation.UseCases.Commands.Reviews;
+using Implementation.UseCases.Validators.Reviews;
+using Application.Queries.Reviews;
+using Implementation.UseCases.Queries.Reviews;
+using Application.Queries.AuditLogs;
+using Implementation.UseCases.Queries.AuditLogs;
 
 public static class DependencyInjection
 {
@@ -57,6 +64,7 @@ public static class DependencyInjection
         services.AddTransient<EmailTemplateComposer>();
         services.AddTransient<CreateBookingValidator>();
         services.AddTransient<UpdateBookingStatusValidator>();
+        services.AddTransient<CreateReviewValidator>();
 
         // Commands
         services.AddTransient<IRegisterUserCommand, EfRegisterUserCommand>();
@@ -77,6 +85,8 @@ public static class DependencyInjection
         services.AddTransient<ICancelBookingCommand, EfCancelBookingCommand>();
         services.AddTransient<IGetMyBookingsQuery, EfGetMyBookingsQuery>();
         services.AddTransient<IUpdateBookingStatusCommand, EfUpdateBookingStatusCommand>();
+        services.AddTransient<IDeleteReviewCommand, EfDeleteReviewCommand>();
+        services.AddTransient<ICreateReviewCommand, EfCreateReviewCommand>();
 
         // Queries
         services.AddTransient<ILoginUserQuery, EfLoginUserQuery>();
@@ -97,6 +107,8 @@ public static class DependencyInjection
         services.AddTransient<IAdminGetErrorLogsQuery, EfAdminGetErrorLogsQuery>();
         services.AddTransient<IGetBookingQuery, EfGetBookingQuery>();
         services.AddTransient<IAdminGetBookingsQuery, EfAdminGetBookingsQuery>();
+        services.AddTransient<IGetRoomReviewsQuery, EfGetRoomReviewsQuery>();
+        services.AddTransient<IAdminGetAuditLogsQuery, EfAdminGetAuditLogsQuery>();
 
         return services;
     }

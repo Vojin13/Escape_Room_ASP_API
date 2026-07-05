@@ -1,6 +1,8 @@
 ﻿using Application.DTO;
+using Application.DTO.Reviews;
 using Application.DTO.Rooms;
 using Application.DTO.Search;
+using Application.Queries.Reviews;
 using Application.Queries.Rooms;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +56,15 @@ namespace API.Controllers
         public IActionResult GetDifficulties([FromServices] IGetDifficultiesQuery query)
         {
             var result = _handler.ExecuteQuery(query, NoData.Instance);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/reviews")]
+        public IActionResult GetRoomReviews(int id, [FromQuery] ReviewSearchDTO dto,
+                                            [FromServices] IGetRoomReviewsQuery query)
+        {
+            dto.RoomId = id;
+            var result = _handler.ExecuteQuery(query, dto);
             return Ok(result);
         }
     }

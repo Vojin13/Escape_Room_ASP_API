@@ -18,6 +18,7 @@ namespace Implementation
         public DbSet<BookingStatusLookup> BookingStatuses { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ErrorLog> ErrorLogs { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<UserUseCase> UserUseCases { get; set; }
         public DbSet<AuthToken> AuthTokens { get; set; }
         public DbSet<RoleUseCase> RoleUseCases { get; set; }

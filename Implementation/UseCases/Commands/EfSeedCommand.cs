@@ -52,7 +52,7 @@ namespace Implementation.UseCases.Commands
                 "delete-review", "get-all-bookings", "seed",
                 "admin-get-users", "admin-get-user", "create-user", "update-user", "delete-user",
                 "get-timeslots", "get-timeslot", "create-timeslot", "update-timeslot", "delete-timeslot",
-                "admin-get-error-logs", "update-booking-status"
+                "admin-get-error-logs", "update-booking-status", "admin-get-audit-logs"
             }).ToList();
 
             _ctx.RoleUseCases.AddRange(userUseCases.Select(uc => new RoleUseCase
@@ -98,7 +98,7 @@ namespace Implementation.UseCases.Commands
                 FirstName = "Admin",
                 LastName = "Admin",
                 Email = "admin@cipherescape.com",
-                Password = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+                Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
                 RoleId = adminRole.Id
             };
 
@@ -116,6 +116,7 @@ namespace Implementation.UseCases.Commands
             _ctx.Users.Add(admin2);
             _ctx.SaveChanges();
             AssignRoleUseCases(admin.Id, adminRole.Id);
+            AssignRoleUseCases(admin2.Id, adminRole.Id);
 
             var faker = new Faker("en");
 
@@ -130,7 +131,7 @@ namespace Implementation.UseCases.Commands
                     FirstName = firstName,
                     LastName = lastName,
                     Email = faker.Internet.Email(firstName, lastName),
-                    Password = BCrypt.Net.BCrypt.HashPassword("User1234!"),
+                    Password = BCrypt.Net.BCrypt.HashPassword("test123"),
                     RoleId = userRole.Id,
                     EmailVerifiedAt = faker.Random.Bool(0.7f) ? DateTime.UtcNow.AddDays(-faker.Random.Int(1, 30)) : null
                 };
@@ -149,12 +150,30 @@ namespace Implementation.UseCases.Commands
             var difficulties = _ctx.Difficulties.ToList();
             var timeslots = _ctx.Timeslots.ToList();
 
-            var availableImages = new[]
+            var imageThemes = new[]
             {
-                "/images/rooms/18/93df7cb0-26ad-4bb8-9f9a-0161d4b7cf2d.png",
-                "/images/rooms/18/e1ca1636-715d-442e-a10e-51ff3678275a.jpg",
-                "/images/rooms/19/4a8b8797-29c9-4cc8-b072-56ccd3749c55.png",
-                "/images/rooms/19/e0feecd1-68ec-47c6-bfa2-d146ce286c41.jpg"
+                new[]
+                {
+                    "/images/rooms/inquisition/primary.jpeg",
+                    "/images/rooms/inquisition/2.jpg",
+                    "/images/rooms/inquisition/3.jpeg",
+                    "/images/rooms/inquisition/4.jpeg"
+                },
+                new[]
+                {
+                    "/images/rooms/lodge/primary.jpg",
+                    "/images/rooms/lodge/2.jpg",
+                    "/images/rooms/lodge/3.jpg",
+                    "/images/rooms/lodge/4.jpg"
+                },
+                new[]
+                {
+                    "/images/rooms/the-witch/primary.jpeg",
+                    "/images/rooms/the-witch/2.jpeg",
+                    "/images/rooms/the-witch/3.jpeg",
+                    "/images/rooms/the-witch/4.jpeg",
+                    "/images/rooms/the-witch/5.jpeg"
+                }
             };
 
             var roomNames = new[]
@@ -217,10 +236,11 @@ namespace Implementation.UseCases.Commands
                     TimeslotId = t.Id
                 }));
 
-                var imageCount = faker.Random.Int(3, 4);
-                for (int j = 0; j < imageCount; j++)
+                var theme = imageThemes[i % imageThemes.Length];
+
+                for (int j = 0; j < theme.Length; j++)
                 {
-                    var imgPath = availableImages[(i * imageCount + j) % availableImages.Length];
+                    var imgPath = theme[j];
                     var ext = Path.GetExtension(imgPath).TrimStart('.');
 
                     _ctx.RoomImages.Add(new RoomImage

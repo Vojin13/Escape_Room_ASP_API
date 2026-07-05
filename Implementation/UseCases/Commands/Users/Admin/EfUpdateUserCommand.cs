@@ -37,6 +37,8 @@ namespace Implementation.UseCases.Commands.Users.Admin
                 throw new NotFoundException("User", data.Id);
             }
 
+            bool roleChanged = user.RoleId != data.RoleId;
+
             user.FirstName = data.FirstName;
             user.LastName = data.LastName;
             user.Username = data.Username;
@@ -44,6 +46,15 @@ namespace Implementation.UseCases.Commands.Users.Admin
             user.RoleId = data.RoleId;
 
             _ctx.SaveChanges();
+
+            if(roleChanged)
+            {
+                var existingUserUseCases = _ctx.UserUseCases.Where(x => x.UserId == user.Id).ToList();
+                _ctx.UserUseCases.RemoveRange(existingUserUseCases);
+                _ctx.SaveChanges();
+
+                AssignRoleUseCases(user.Id, data.RoleId);
+            }
         }
     }
 }

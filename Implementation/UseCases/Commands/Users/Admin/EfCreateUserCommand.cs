@@ -33,16 +33,13 @@ namespace Implementation.UseCases.Commands.Users.Admin
         {
             _validator.ValidateAndThrow(data);
 
-            var userRole = _ctx.Roles.First(x => x.Slug == "user");
-
             var user = _mapper.Map<User>(data);
             user.Password = BCrypt.Net.BCrypt.HashPassword(data.Password);
-            user.RoleId = userRole.Id;
 
             _ctx.Users.Add(user);
             _ctx.SaveChanges();
 
-            AssignRoleUseCases(user.Id, userRole.Id);
+            AssignRoleUseCases(user.Id, user.RoleId);
         }
     }
 }

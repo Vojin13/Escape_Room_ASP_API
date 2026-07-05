@@ -30,8 +30,8 @@ namespace Implementation.UseCases.Queries.Bookings.Admin
             }
 
             query = request.SortDescending
-                ? query.OrderByDescending(x => x.BookingDate)
-                : query.OrderBy(x => x.BookingDate);
+                ? query.OrderByDescending(x => x.CreatedAt)
+                : query.OrderBy(x => x.CreatedAt);
 
             return query.Select(x => new BookingDTO
             {
@@ -41,8 +41,8 @@ namespace Implementation.UseCases.Queries.Bookings.Admin
                 UserId = x.UserId,
                 Username = x.User.Username,
                 TimeslotId = x.TimeslotId,
-                StartTime = x.Timeslot.StartTime.ToString(@"HH\:mm"),
-                EndTime = x.Timeslot.EndTime.ToString(@"HH\:mm"),
+                StartTime = x.Timeslot.StartTime.ToString("HH:mm"),
+                EndTime = x.Timeslot.EndTime.ToString("HH:mm"),
                 BookingDate = x.BookingDate,
                 NumberOfPlayers = x.NumberOfPlayers,
                 TotalPrice = x.TotalPrice,
