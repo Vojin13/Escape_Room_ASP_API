@@ -25,6 +25,9 @@ builder.Services.AddTransient<IEmailSender>(_ => new SmtpEmailSender(
     settings.MailSettings.FromEmail,
     settings.MailSettings.AppPassword));
 builder.Services.AddApplicationUser();
+builder.Services.AddRateLimiting(settings);
+builder.Services.AddBackgroundJobs(settings);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
@@ -47,9 +50,13 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAngular");
 app.UseStaticFiles();
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();
+
+app.UseScheduledJobs();
+
 app.Run();

@@ -1,17 +1,16 @@
-﻿using Application;
+using Application;
 using ASPLAB2.API;
 using ASPLAB2.API.JWT;
 using Implementation;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace API.Extensions;
 
-public static class ServiceCollectionExtensions
+public static class JwtServiceExtensions
 {
     public static IServiceCollection AddJwt(this IServiceCollection services, AppSettings settings)
     {
@@ -57,52 +56,6 @@ public static class ServiceCollectionExtensions
                     return Task.CompletedTask;
                 }
             };
-        });
-
-        return services;
-    }
-
-    public static IServiceCollection AddApplicationUser(this IServiceCollection services)
-    {
-        services.AddTransient<IApplicationUser>(container =>
-        {
-            var accessor = container.GetService<IHttpContextAccessor>();
-
-            if (accessor.HttpContext == null)
-                return new UnauthorizedUser();
-
-            if (!accessor.HttpContext.Request.Headers.ContainsKey("Authorization"))
-                return new UnauthorizedUser();
-
-            var header = accessor.HttpContext.Request.Headers.Authorization;
-            var headerParts = header.ToString().Split(" ");
-
-            if (headerParts.Count() != 2 || headerParts[0] != "Bearer")
-                return new UnauthorizedUser();
-
-            try
-            {
-                var token = headerParts[1];
-                var handler = new JwtSecurityTokenHandler();
-                var jwtToken = handler.ReadJwtToken(token);
-
-                var useCaseIds = jwtToken.Claims
-                    .FirstOrDefault(x => x.Type == "UseCaseIds")?.Value;
-
-                return new JwtUser
-                {
-                    Id = int.Parse(jwtToken.Claims.First(x => x.Type == "Id").Value),
-                    Username = jwtToken.Claims.First(x => x.Type == "Username").Value,
-                    Email = jwtToken.Claims.First(x => x.Type == "Email").Value,
-                    AllowedUseCases = useCaseIds != null
-                        ? JsonConvert.DeserializeObject<List<string>>(useCaseIds)
-                        : new List<string>()
-                };
-            }
-            catch
-            {
-                return new UnauthorizedUser();
-            }
         });
 
         return services;

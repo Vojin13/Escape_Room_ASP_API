@@ -74,7 +74,7 @@ namespace Implementation.UseCases.Queries.Bookings
 
             if(existingLock != null)
             {
-                existingLock.ExpiresAt = now.AddMinutes(5);
+                existingLock.ExpiresAt = now.AddMinutes(15);
 
                 _ctx.SaveChanges();
 
@@ -89,7 +89,7 @@ namespace Implementation.UseCases.Queries.Bookings
             {
                 RoomId = request.RoomId,
                 Date = date,
-                ExpiresAt = now.AddMinutes(5),
+                ExpiresAt = now.AddMinutes(15),
                 UserId = _user.Id,
                 TimeslotId = request.TimeslotId,
             };

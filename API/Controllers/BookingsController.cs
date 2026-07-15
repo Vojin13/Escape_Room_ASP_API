@@ -58,6 +58,20 @@ namespace API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("cart")]
+        public IActionResult GetMyCart([FromServices] IGetMyCartQuery query)
+        {
+            var result = _handler.ExecuteQuery(query, NoData.Instance);
+            return Ok(result);
+        }
+
+        [HttpDelete("cart")]
+        public IActionResult CancelLock([FromServices] ICancelLockCommand command)
+        {
+            _handler.ExecuteCommand(command, NoData.Instance);
+            return NoContent();
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetBooking(int id,
                                         [FromQuery] GetBookingDTO dto,

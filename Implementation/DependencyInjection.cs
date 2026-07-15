@@ -44,6 +44,8 @@ using Application.Queries.Reviews;
 using Implementation.UseCases.Queries.Reviews;
 using Application.Queries.AuditLogs;
 using Implementation.UseCases.Queries.AuditLogs;
+using Application.Jobs;
+using Implementation.Jobs;
 
 public static class DependencyInjection
 {
@@ -83,6 +85,7 @@ public static class DependencyInjection
         services.AddTransient<IActivateAccountCommand, EfActivateAccountCommand>();
         services.AddTransient<ICreateBookingCommand, EfCreateBookingCommand>();
         services.AddTransient<ICancelBookingCommand, EfCancelBookingCommand>();
+        services.AddTransient<ICancelLockCommand, EfCancelLockCommand>();
         services.AddTransient<IGetMyBookingsQuery, EfGetMyBookingsQuery>();
         services.AddTransient<IUpdateBookingStatusCommand, EfUpdateBookingStatusCommand>();
         services.AddTransient<IDeleteReviewCommand, EfDeleteReviewCommand>();
@@ -106,9 +109,15 @@ public static class DependencyInjection
         services.AddTransient<IGetBookingStatusesQuery, EfGetBookingStatusesQuery>();
         services.AddTransient<IAdminGetErrorLogsQuery, EfAdminGetErrorLogsQuery>();
         services.AddTransient<IGetBookingQuery, EfGetBookingQuery>();
+        services.AddTransient<IGetMyCartQuery, EfGetMyCartQuery>();
         services.AddTransient<IAdminGetBookingsQuery, EfAdminGetBookingsQuery>();
         services.AddTransient<IGetRoomReviewsQuery, EfGetRoomReviewsQuery>();
         services.AddTransient<IAdminGetAuditLogsQuery, EfAdminGetAuditLogsQuery>();
+
+        // Jobs
+        services.AddTransient<ICleanupExpiredTokensJob, CleanupExpiredTokensJob>();
+        services.AddTransient<ICompleteExpiredBookingsJob, CompleteExpiredBookingsJob>();
+        services.AddTransient<ICleanupExpiredTimeslotLocksJob, CleanupExpiredTimeslotLocksJob>();
 
         return services;
     }

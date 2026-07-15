@@ -3,6 +3,7 @@ using Application.DTO.Auth;
 using Application.Queries.Auth;
 using Implementation.UseCases;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,6 +28,7 @@ namespace API.Controllers.Auth
             return StatusCode(201);
         }
 
+        [EnableRateLimiting("login")]
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDTO dto,
                                    [FromServices] ILoginUserQuery query)

@@ -8,7 +8,16 @@
         public JwtSettings JwtSettings { get; set; }
         public ConnectionStrings ConnectionStrings { get; set; }
         public MailSettings MailSettings { get; set; }
+        public RateLimitSettings RateLimitSettings { get; set; }
 
+    }
+
+    public class RateLimitSettings
+    {
+        public int GlobalPermitLimit { get; set; }
+        public int GlobalWindowSeconds { get; set; }
+        public int LoginPermitLimit { get; set; }
+        public int LoginWindowSeconds { get; set; }
     }
 
     public class ConnectionStrings

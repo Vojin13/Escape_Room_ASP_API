@@ -38,8 +38,8 @@ namespace Implementation.UseCases.Commands
             var userUseCases = new List<string>
             {
                 "get-rooms", "get-room", "get-room-availability",
-                "lock-timeslot", "create-booking", "cancel-booking",
-                "create-review", "get-my-bookings", "get-booking",
+                "lock-timeslot", "create-booking", "cancel-booking", "cancel-lock",
+                "create-review", "get-my-bookings", "get-booking", "get-my-cart",
                 "get-room-reviews", "get-my-profile", "update-my-profile",
                 "logout", "register-user", "login", "refresh-token", "account-activate",
                 "get-difficulties", "get-booking-statuses"
