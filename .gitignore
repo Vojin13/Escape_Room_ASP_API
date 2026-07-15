@@ -366,3 +366,6 @@ wwwroot/
 
 # Local secrets (SMTP app password, DB connection string, JWT signing key)
 API/appsettings.Development.json
+
+# Claude Code local skills
+.claude/skills/
