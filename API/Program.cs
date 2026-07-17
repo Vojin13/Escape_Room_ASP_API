@@ -12,6 +12,12 @@ var settings = new AppSettings();
 builder.Configuration.Bind(settings);
 builder.Services.AddSingleton(settings);
 
+builder.WebHost.UseSentry(o =>
+{
+    o.Dsn = settings.SentrySettings.Dsn;
+    o.Debug = settings.SentrySettings.Debug;
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -27,6 +33,7 @@ builder.Services.AddTransient<IEmailSender>(_ => new SmtpEmailSender(
 builder.Services.AddApplicationUser();
 builder.Services.AddRateLimiting(settings);
 builder.Services.AddBackgroundJobs(settings);
+builder.Services.AddCaching(settings);
 
 builder.Services.AddCors(options =>
 {

@@ -3,6 +3,7 @@ using Application.Exceptions;
 using Domain.Entities;
 using FluentValidation;
 using Implementation;
+using Sentry;
 
 public class GlobalExceptionHandlingMiddleware
 {
@@ -64,6 +65,11 @@ public class GlobalExceptionHandlingMiddleware
             }
 
             var supportCode = Guid.NewGuid();
+
+            SentrySdk.CaptureException(ex, scope =>
+            {
+                scope.SetTag("support_code", supportCode.ToString());
+            });
 
             var dbContext = context.RequestServices.GetRequiredService<AppDbContext>();
             var applicationUser = context.RequestServices.GetRequiredService<IApplicationUser>();

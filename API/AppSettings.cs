@@ -9,7 +9,21 @@
         public ConnectionStrings ConnectionStrings { get; set; }
         public MailSettings MailSettings { get; set; }
         public RateLimitSettings RateLimitSettings { get; set; }
+        public RedisSettings RedisSettings { get; set; }
+        public SentrySettings SentrySettings { get; set; }
 
+    }
+
+    public class RedisSettings
+    {
+        public string ConnectionString { get; set; }
+        public string InstanceName { get; set; }
+    }
+
+    public class SentrySettings
+    {
+        public string Dsn { get; set; }
+        public bool Debug { get; set; }
     }
 
     public class RateLimitSettings
