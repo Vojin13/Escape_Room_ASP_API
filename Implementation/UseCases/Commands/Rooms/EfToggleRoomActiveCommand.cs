@@ -1,4 +1,5 @@
-﻿using Application.Commands.Rooms;
+﻿using Application;
+using Application.Commands.Rooms;
 using Application.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,11 @@ namespace Implementation.UseCases.Commands.Rooms
 {
     public class EfToggleRoomActiveCommand : EfUseCase, IToggleRoomActiveCommand
     {
-        public EfToggleRoomActiveCommand(AppDbContext context) : base(context)
+        private readonly ICacheService _cache;
+
+        public EfToggleRoomActiveCommand(AppDbContext context, ICacheService cache) : base(context)
         {
+            _cache = cache;
         }
 
         public string Name => "Toggle Room Activation";
@@ -29,6 +33,8 @@ namespace Implementation.UseCases.Commands.Rooms
 
             room.IsActive = !room.IsActive;
             _ctx.SaveChanges();
+
+            _cache.Remove($"room:{data}");
         }
     }
 }

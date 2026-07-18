@@ -1,3 +1,4 @@
+using Application;
 using Application.Commands.Rooms;
 using Application.DTO.Rooms;
 using Application.Exceptions;
@@ -10,10 +11,12 @@ namespace Implementation.UseCases.Commands.Rooms
     public class EfUpdateRoomCommand : EfUseCase, IUpdateRoomCommand
     {
         private readonly UpdateRoomValidator _validator;
+        private readonly ICacheService _cache;
 
-        public EfUpdateRoomCommand(AppDbContext context, UpdateRoomValidator validator) : base(context)
+        public EfUpdateRoomCommand(AppDbContext context, UpdateRoomValidator validator, ICacheService cache) : base(context)
         {
             _validator = validator;
+            _cache = cache;
         }
 
         public string Name => "Update Room";
@@ -47,6 +50,8 @@ namespace Implementation.UseCases.Commands.Rooms
             }));
 
             _ctx.SaveChanges();
+
+            _cache.Remove($"room:{data.Id}");
         }
     }
 }

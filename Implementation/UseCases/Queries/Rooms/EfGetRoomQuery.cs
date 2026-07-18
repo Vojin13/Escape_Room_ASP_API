@@ -1,4 +1,5 @@
-﻿using Application.DTO.Rooms;
+﻿using Application;
+using Application.DTO.Rooms;
 using Application.DTO.Timeslot;
 using Application.Exceptions;
 using Application.Queries.Rooms;
@@ -8,8 +9,11 @@ namespace Implementation.UseCases.Queries.Rooms
 {
     public class EfGetRoomQuery : EfUseCase, IGetRoomQuery
     {
-        public EfGetRoomQuery(AppDbContext context) : base(context)
+        private readonly ICacheService _cache;
+
+        public EfGetRoomQuery(AppDbContext context, ICacheService cache) : base(context)
         {
+            _cache = cache;
         }
 
         public string Name => "Get Room Details";
@@ -18,6 +22,15 @@ namespace Implementation.UseCases.Queries.Rooms
 
         public RoomDetailsDTO Execute(int id)
         {
+            var cacheKey = $"room:{id}";
+
+            var cached = _cache.Get<RoomDetailsDTO>(cacheKey);
+
+            if (cached != null)
+            {
+                return cached;
+            }
+
             var room = _ctx.Rooms
                            .Include(x => x.Images)
                            .Include(x => x.Reviews)
@@ -31,7 +44,7 @@ namespace Implementation.UseCases.Queries.Rooms
                 throw new NotFoundException("Room", id);
             }
 
-            return new RoomDetailsDTO
+            var dto = new RoomDetailsDTO
             {
                 Title = room.Title,
                 Description = room.Description,
@@ -54,6 +67,10 @@ namespace Implementation.UseCases.Queries.Rooms
                 ReviewCount = room.Reviews.Count,
                 AverageRating = room.Reviews.Any() ? room.Reviews.Average(x => x.Rating) : 0,
             };
+
+            _cache.Set(cacheKey, dto, TimeSpan.FromMinutes(10));
+
+            return dto;
         }
     }
 }

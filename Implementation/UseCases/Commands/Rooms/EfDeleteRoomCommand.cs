@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application;
 using Application.Commands.Rooms;
 using Application.Exceptions;
 
@@ -10,8 +11,11 @@ namespace Implementation.UseCases.Commands.Rooms
 {
     public class EfDeleteRoomCommand : EfUseCase, IDeleteRoomCommand
     {
-        public EfDeleteRoomCommand(AppDbContext context) : base(context)
+        private readonly ICacheService _cache;
+
+        public EfDeleteRoomCommand(AppDbContext context, ICacheService cache) : base(context)
         {
+            _cache = cache;
         }
 
         public string Name => "Delete Room";
@@ -30,6 +34,8 @@ namespace Implementation.UseCases.Commands.Rooms
             room.IsActive = false;
 
             _ctx.SaveChanges();
+
+            _cache.Remove($"room:{data}");
         }
     }
 }
