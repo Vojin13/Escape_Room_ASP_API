@@ -8,6 +8,6 @@ namespace ASPLAB2.API.JWT
         public int Id { get; set; }
         public string Email { get; set; }
         public string Username { get; set;}
-        public IEnumerable<string> AllowedUseCases { get; set; } = new List<string> { "search-plays", "add-repertoire" };
+        public IEnumerable<string> AllowedUseCases { get; set; } = new List<string>();
     }
 }
